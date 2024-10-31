@@ -1,5 +1,4 @@
-grpcio==1.59.3
-grpcio-tools==1.59.3
 pycryptodome
 fastapi
 uvicorn
+gmssl
