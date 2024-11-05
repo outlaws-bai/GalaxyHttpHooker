@@ -83,14 +83,14 @@ async def hookRequestToServer(request: RequestModel):
 
 @app.post("/hookResponseToBurp", response_model=ResponseModel)
 async def hookResponseToBurp(response: ResponseModel):
-    """HTTP请求从Server到达Burp时被调用。在此处完成响应解密的代码就可以在Burp中看到明文的响应报文。"""
+    """HTTP响应从Server到达Burp时被调用。在此处完成响应解密的代码就可以在Burp中看到明文的响应报文。"""
     response.set_content(aes_decrypt(get_encrypt_text(response.get_content())))
     return response
 
 
 @app.post("/hookResponseToClient", response_model=ResponseModel)
 async def hookResponseToClient(response: ResponseModel):
-    """HTTP请求从Burp将要发送到Client时被调用。在此处完成响应加密的代码就可以将加密后的响应报文返回给Client。"""
+    """HTTP响应从Burp将要发送到Client时被调用。在此处完成响应加密的代码就可以将加密后的响应报文返回给Client。"""
     response.set_content(to_encrypt_body(aes_encrypt(response.get_content())))
     return response
 
