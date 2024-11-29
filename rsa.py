@@ -26,7 +26,6 @@ async def hook_request_to_burp(request: RequestModel):
     encrypted_data: bytes = get_data(request.content)
     # 调用函数解密
     data: bytes = decrypt(encrypted_data, pri_key1)
-    print(encrypted_data, data)
     # 更新body为已解密的数据
     request.content = data
     return request
