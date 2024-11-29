@@ -88,7 +88,7 @@ def to_data(contnet: bytes) -> bytes:
 
 if __name__ == "__main__":
     # 多进程启动
-    # uvicorn manager:app --host 0.0.0.0 --port 5000 --workers 4
+    # uvicorn aes_cbc:app --host 0.0.0.0 --port 5000 --workers 4
     import uvicorn
 
     uvicorn.run(app, host="0.0.0.0", port=5000)
