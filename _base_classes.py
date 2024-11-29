@@ -2,7 +2,7 @@ import base64
 import typing as t
 from pydantic import BaseModel
 
-__all__ = ["RequestModel", "ResponseModel"]
+__all__ = ["RequestModel", "ResponseModel", "parse_sm2_pri", "parse_sm2_pub"]
 
 
 class RequestModel(BaseModel):
@@ -41,10 +41,11 @@ class ResponseModel(BaseModel):
         self.contentBase64 = base64.b64encode(content).decode()
 
 
-class UploadFile: ...
+def parse_sm2_pri(pri):
+    pri_hex = pri.hex()
+    return pri_hex[72 : 72 + 64]
 
 
-class Form(t.Dict[str, t.List[str]]): ...
-
-
-class FormData(t.Dict[str, t.List[t.Union[str, UploadFile]]]): ...
+def parse_sm2_pub(pub):
+    pub_hex = pub.hex()
+    return pub_hex[-128:]
