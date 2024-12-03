@@ -32,7 +32,6 @@ async def hook_request_to_burp(request: RequestModel):
 async def hook_request_to_server(request: RequestModel):
     """HTTP请求从Burp将要发送到Server时被调用。在此处完成请求加密的代码就可以将加密后的请求报文发送到Server。"""
     # 获取被解密的数据
-    print(request.content)
     data: bytes = parse_qs(request.content.decode())["username"][0].encode()
     # 调用函数加密回去
     encryptedData: bytes = encrypt(data)
