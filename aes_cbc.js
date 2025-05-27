@@ -6,7 +6,7 @@ const crypto = require("crypto");
 const bodyParser = require("body-parser");
 
 const app = express();
-const PORT = 5000;
+const PORT = 5002;
 
 // 全局密钥和IV
 const KEY = Buffer.from("32byteslongsecretkeyforaes256!aa"); // 32字节密钥
@@ -44,52 +44,56 @@ function toData(content) {
 }
 
 // 请求钩子：hookRequestToBurp
-app.post("/hookRequestToBurp", (req, res) => {
+app.post("/hookRequestToBurp", (lreq, lres) => {
+  const request = lreq.body
   try {
-    const encryptedData = getData(Buffer.from(req.body.contentBase64, "base64"));
+    const encryptedData = getData(Buffer.from(request.contentBase64, "base64"));
     const data = decrypt(encryptedData);
-    req.body.contentBase64 = data.toString("base64");
-    res.json(req.body);
+    request.contentBase64 = data.toString("base64");
+    lres.json(request);
   } catch (err) {
-    res.status(500).send({ error: "Decryption failed" });
+    lres.status(500).send({ error: "Decryption failed" });
   }
 });
 
 // 请求钩子：hookRequestToServer
-app.post("/hookRequestToServer", (req, res) => {
+app.post("/hookRequestToServer", (lreq, lres) => {
+  const request = lreq.body
   try {
-    const data = Buffer.from(req.body.contentBase64, "base64");
+    const data = Buffer.from(request.contentBase64, "base64");
     const encryptedData = encrypt(data);
     const body = toData(encryptedData);
-    req.body.contentBase64 = body.toString("base64");
-    res.json(req.body);
+    request.contentBase64 = body.toString("base64");
+    lres.json(request);
   } catch (err) {
-    res.status(500).send({ error: "Encryption failed" });
+    lres.status(500).send({ error: "Encryption failed" });
   }
 });
 
 // 响应钩子：hookResponseToBurp
-app.post("/hookResponseToBurp", (req, res) => {
+app.post("/hookResponseToBurp", (lreq, lres) => {
+  const response = lreq.body
   try {
-    const encryptedData = getData(Buffer.from(req.body.contentBase64, "base64"));
+    const encryptedData = getData(Buffer.from(response.contentBase64, "base64"));
     const data = decrypt(encryptedData);
-    req.body.contentBase64 = data.toString("base64");
-    res.json(req.body);
+    response.contentBase64 = data.toString("base64");
+    lres.json(response);
   } catch (err) {
-    res.status(500).send({ error: "Decryption failed" });
+    lres.status(500).send({ error: "Decryption failed" });
   }
 });
 
 // 响应钩子：hookResponseToClient
-app.post("/hookResponseToClient", (req, res) => {
+app.post("/hookResponseToClient", (lreq, lres) => {
+  const response = lreq.body
   try {
-    const data = Buffer.from(req.body.contentBase64, "base64");
+    const data = Buffer.from(response.contentBase64, "base64");
     const encryptedData = encrypt(data);
     const body = toData(encryptedData);
-    req.body.contentBase64 = body.toString("base64");
-    res.json(req.body);
+    response.contentBase64 = body.toString("base64");
+    lres.json(response);
   } catch (err) {
-    res.status(500).send({ error: "Encryption failed" });
+    lres.status(500).send({ error: "Encryption failed" });
   }
 });
 
